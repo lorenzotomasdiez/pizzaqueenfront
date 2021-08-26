@@ -1,0 +1,14 @@
+.home{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #F9F9F9;
+}
+.homeContainer{
+    display: flex;
+    justify-content: space-between;
+}
+.itemWrapper{
+    background-color: tomato;
+}

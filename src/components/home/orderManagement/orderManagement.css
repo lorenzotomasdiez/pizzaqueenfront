@@ -1,0 +1,60 @@
+.omHeader{
+    text-align: center;
+    padding: 10px 0px;
+}
+.omContent{
+    display: flex;
+    max-width: 390px;
+}
+
+.orderWrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0px 18px 53px 0px rgba(0,0,0,0.3);
+    border-radius: 20px;
+    padding: 10px;
+}
+.orderForm{
+    display: flex;
+    flex-direction: column;
+}
+.orderForm{
+    display: flex;
+    flex-direction: column;
+}
+.addOrderWrapper{
+    display: flex;
+}
+.aoParent{
+    padding: 10px;
+    align-items: center;
+}
+.aoChild{
+    padding:5px 0px;
+    width: 100%;
+}
+#orderSelect{
+    padding-top: 5px;
+}
+.aoTime{
+    display: flex;
+    align-items: center;
+}
+#addOrder_chips{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width: 100%;
+    max-height: 200px;
+    align-content: space-between;
+    justify-content: space-between;
+    padding-bottom: 10px;
+}
+.aoChips{
+    margin: 5px;
+}
+.aoSend{
+    text-align: center;
+}
