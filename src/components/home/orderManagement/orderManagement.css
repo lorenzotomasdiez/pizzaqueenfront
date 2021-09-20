@@ -1,18 +1,33 @@
 .omHeader{
     text-align: center;
-    padding: 10px 0px;
+    padding: 5px 0px 0px 0px;
 }
 .omContent{
     display: flex;
-    max-width: 390px;
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
 }
+#orderList{
+    margin: 5px;
+    flex: 2;
+    width: 100%;
+    padding-right: 15px;
+}
+#om_divbutton{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+/*---------------------------------------------------------*/
+/*----------             ADD ORDER             ------------*/
+/*---------------------------------------------------------*/
 .ao__form{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    box-shadow: 0px 18px 53px 0px rgba(0,0,0,0.3);
-    border-radius: 20px;
     padding: 10px;
 }
 .ao__wrapper{
@@ -22,18 +37,28 @@
     padding: 10px;
     align-items: center;
 }
-
-
-
+.formControl{
+    position: relative;
+    bottom: -10px;
+    padding-left: 10px;
+}
 .ao_timediv{
     padding: 10px 0;
 }
 .ao_addressdiv{
+    width: 110%;
     display: flex;
     text-align: center;
     align-items: center;
+    padding-bottom: 10px;
 }
-
+.ao_totalpricediv{
+    width: 110%;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    padding-bottom: 9px;
+}
 .ao_selectproduct{
     padding: 7px 0;
 }
@@ -43,55 +68,114 @@
     text-transform: uppercase;
     color: red;
 }
-/*---------------------------------------------------------*/
-.orderWrapper{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0px 18px 53px 0px rgba(0,0,0,0.3);
-    border-radius: 20px;
-    padding: 10px;
-}
-.orderForm{
-    display: flex;
-    flex-direction: column;
-}
-.orderForm{
-    display: flex;
-    flex-direction: column;
-}
-.addOrderWrapper{
-    display: flex;
-}
-.aoParent{
-    padding: 10px;
-    align-items: center;
-}
-.aoChild{
-    padding:5px 0px;
-    width: 100%;
-}
-#orderSelect{
-    padding-top: 5px;
-}
-.aoTime{
-    display: flex;
-    align-items: center;
-}
 #addOrder_chips{
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
     width: 100%;
     max-height: 200px;
-    align-content: space-between;
-    justify-content: space-between;
+    align-content: center;
+    justify-content: center;
     padding-bottom: 10px;
+    overflow:hidden;
 }
 .aoChips{
     margin: 5px;
 }
-.aoSend{
+/*---------------------------------------------------------*/
+/*----------            ORDER LIST             ------------*/
+/*---------------------------------------------------------*/
+.ol__content{
+    width: 100%;
+}
+.orderListContainer{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0px 18px 53px 0px rgba(0,0,0,0.3);
+    border-radius: 20px;
+    padding: 5px;
+    margin-bottom: 20px;
+}
+.ol__card{
+    margin: 5px 5px 5px 5px;
+}
+.cardFields{
+    font-family: 'Courier New', Courier, monospace;
+    width: 23%;
+    margin: 6px !important;
+}
+#ol__header{
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    width: 100%;
     text-align: center;
+}
+#ol__title{
+    flex-grow: 1;
+    margin-left: 220px;
+}
+#ol__time{
+    padding-right:17px ;
+}
+.ol__div{
+    display: flex;
+    width: 100%;
+    box-shadow: 0px 18px 53px 0px rgba(0,0,0,0.15);
+    border-radius: 10px;
+    margin: 10px;
+}
+.ol_button{
+    margin:0 20px;
+}
+
+.button__color{
+    background-color: #f9f9f9 !important;
+    box-shadow: 0px 18px 53px 0px rgba(0,0,0,0.15);
+}
+.button__color:hover{
+    background-color: #b8a9af !important;
+    transition: ease-in-out 1s !important;
+}
+
+.description__card{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.divider{
+    height: 150px;
+    border: 1px solid black
+}
+.card_div{
+    min-width: 200px;
+    max-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+
+}
+.card_productsdiv{
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 300px;
+    flex-direction: column;
+    align-items: center;
+}
+.productsdiv_item{
+    text-align: center;
+}
+.description_field{
+    margin: 10px;
+
+}
+.deleteorder_buttons{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

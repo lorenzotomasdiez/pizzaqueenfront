@@ -2,71 +2,99 @@ import React, { useEffect, useState } from 'react'
 import { Button, Chip, FormControl, MenuItem, TextField, Select, Checkbox, FormControlLabel } from '@material-ui/core' 
 import { useForm } from 'react-hook-form'
 
-const AddOrder = () => {
+const AddOrder = ({setOpenPopup, setRerender, rerender}) => {
     //-----------------Local variables---------------------
-    const URLPRODUCTS = "http://localhost:8080/orderProducts/all"
+    const URLPRODUCTS = "http://localhost:8080/products/all"
+    const URLPOST = "http://localhost:8080/orders/save"
     //-----------------Instances---------------------------
     const [product, setProduct] = useState([])
     const {register, formState: { errors }, handleSubmit , setValue} = useForm()
-    const [order, setOrder] = useState('')
     const [time, setTime] = useState(getTimeNow)
-    const [orderProducts, setOrderProducts] = useState([product])
+    const [orderProducts, setOrderProducts] = useState([])
+    const [discount, setDiscount] = useState(false)
     //-------------------Methods---------------------------
-    const onSubmit = (data) => {
-        setOrder(data)
-        console.log(data)
+    register('orderProducts', {required: true})
+    setValue('orderTimeNow', time)
+    const onSubmit = (data, e) => {
+        e.target.reset()
+        setOrderProducts([...[]])
+        fetchSendData(data, URLPOST)
+        setOpenPopup(false)
+        setRerender([...rerender])
     }
     const onProductsChange = (e) => {
-        debugger
         let array = orderProducts
-        let prod = product.filter(product=>{
-            return product.productName===e.target.value
-        })
-        prod=prod[0]
-        array.push(prod)
+        let productObject = product.find(element=>element.productName===e.target.value)
+        let object = {
+            key:array.length,
+            productName:productObject.productName,
+            productPrice:productObject.productPrice
+        }
+        array.push(object)
         setOrderProducts([...array])
-        setValue('order_products', orderProducts.toString())
-        // hay que agregar los productos y setear al form
-        // todos los productos
-        // lo mismo en delete de elementos
-        console.log(orderProducts)
-    }
-    const onDeleteChip = (data) => {
-        let array = orderProducts.filter(e=>{
-            return e.productName!==data.productName
-        })
-        setOrderProducts([...array])
+        //-----------------------------------------------
+        let totalPrice = (getDeliveryCost()+getProductPrice(orderProducts))-getDiscount()
+        setValue('orderPrice', totalPrice)
+        setValue('orderProducts', getProducts(orderProducts))
     }
     const onClickDelivery = (e) => {
         let checked = e.target.checked
-        let element = document.querySelector('#order_address')
-        let div = document.querySelector('#order_address-label')
+        let element = document.querySelector('#orderAddress')
+        let deliveryElement = document.querySelector('#orderDeliveryCost')
+        let divDeliveryElement = document.querySelector('#orderDeliveryCost-label')
+        let div = document.querySelector('#orderAddress-label')
         if(checked){
-            setValue("order_address","Retira en local")
+            setValue("orderAddress","Retira en local")
+            setValue("orderDeliveryCost", 0)
+            setValue("orderPrice", (getProductPrice(orderProducts)-getDiscount()))
             element.setAttribute('disabled', 'true')
+            deliveryElement.setAttribute('disabled', 'true')
             div.classList.add('MuiInputLabel-shrink')
             div.classList.add('Mui-focused')
+            divDeliveryElement.classList.add('MuiInputLabel-shrink')
+            divDeliveryElement.classList.add('Mui-focused')
         }else{
             element.removeAttribute('disabled')
-            setValue("order_address","")
+            deliveryElement.removeAttribute('disabled')
+            setValue("orderAddress","")
+            setValue("orderDeliveryCost", null)
             div.classList.remove('MuiInputLabel-shrink')
             div.classList.remove('Mui-focused')
+            divDeliveryElement.classList.remove('MuiInputLabel-shrink')
+            divDeliveryElement.classList.remove('Mui-focused')
         }
     }
     const onBlurDeliveryCost = (e) => {
-        let deliveryCost = e.target.value ? parseInt(e.target.value) : 0
-        let totalPrice = parseInt(document.querySelector('#order_final_price').value)
-        //aca va el precio total de todos los productos elegidos
-        // y seria deliveryCost+orderProductsPrice
-        setValue('order_final_price', deliveryCost)
+        let totalPrice = (getDeliveryCost()+getProductPrice(orderProducts))-getDiscount()
+        setValue('orderPrice', totalPrice)
+    }
+    const onChangeDiscount = (e) => {
+        let active = e.target.checked ? true : false
+        if(active){
+            setDiscount(true)
+        }else{
+            setDiscount(false)
+        }
+    }
+    const onBlurDiscountMount = () => {
+        let totalPrice = (getDeliveryCost()+getProductPrice(orderProducts))-getDiscount()
+        setValue('orderPrice', totalPrice)
+    }
+    const onDeleteChip = (data) => {
+        let array = orderProducts.filter(e=>{
+            return e.key!==data.key
+        })
+        setOrderProducts([...array])
+        let totalPrice = (getDeliveryCost()+getProductPrice(array))-getDiscount()
+        setValue('orderPrice', totalPrice)
+        setValue('orderProducts', getProducts(array))
     }
     useEffect(() => {
         fetchApi(URLPRODUCTS, setProduct)
-        register('order_products', '')
-        setInterval( () => {
-            setTime(getTimeNow)
-          },45000)
-    },[getTimeNow])
+    },[])
+    useEffect(()=>{
+        setTime(getTimeNow)
+    },[orderProducts])
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="ao__form" >
             <div className="ao__wrapper">
@@ -74,18 +102,20 @@ const AddOrder = () => {
                 <div className="ao__container">
                     <div>
                         <TextField 
-                            {...register('order_name',{ required: true})} 
+                            {...register('orderName',{ required: true})} 
                             label="Nombre"
+                            
                         />
-                        <p className="ao_validerror">{errors.order_name && "Debe Ingresar Nombre"}</p>
+                       <p className="ao_validerror">{errors.orderName && "Debe Ingresar Nombre"}</p>
                     </div>
                     <div className="ao_addressdiv">
                         <div>
-                            <TextField id="order_address"
-                                {...register('order_address',{ required: true})} 
+                            <TextField id="orderAddress"
+                                {...register('orderAddress',{ required: true})} 
                                 label="Direccion"
-                                />
-                            <p className="ao_validerror">{errors.order_address && "Debe ingresar direccion"}</p>
+                                
+                            />
+                            <p className="ao_validerror">{errors.orderAddress && "Debe ingresar direccion"}</p>
                         </div>
                         <div>
                             <FormControlLabel
@@ -105,16 +135,26 @@ const AddOrder = () => {
                             }
                         </Select>
                     </FormControl>
+                    {discount
+                        ?
+                        <div className="ao__discountdiv">
+                            <TextField id="discountMount" 
+                                label="Descuento"
+                                type="number"
+                                onBlur={onBlurDiscountMount}
+                            />
+                        </div>
+                        //No renderiza nada
+                        :null
+                    }
                     <div className="ao_timediv">
                         <TextField //tiempo actual
-                            {...register('order_timenow')}
+                            {...register('orderTimeNow')}
                             className="inputTime"
                             label="Pedido"
                             type="time"
                             value={time}
-                            inputProps={{
-                                step: 300, // 5 min
-                            }}
+                            
                             disabled
                             
                         />
@@ -124,63 +164,106 @@ const AddOrder = () => {
                 <div className="ao__container">
                     <div>
                         <TextField 
-                            {...register('order_phone')} 
+                            {...register('orderPhone')} 
                             type="number" 
                             label="Telefono" 
                         />
                     </div>
-                    <div>
-                        <TextField 
-                            {...register('order_delivery_cost')} 
-                            type="number" 
-                            label="Costo Envio"
-                            onBlur={onBlurDeliveryCost}
-                        />
+                    <div className="ao_totalpricediv">
+                        <div>
+                            <TextField
+                                id="orderDeliveryCost"
+                                {...register('orderDeliveryCost', {required:true})} 
+                                type="number" 
+                                label="Costo Envio"
+                                onBlur={onBlurDeliveryCost}
+                                
+                            />
+                            <p className="ao_validerror">{errors.orderDeliveryCost && "Debe ingresar costo de envio"}</p>
+                        </div>
+                        <div>
+                            <FormControlLabel
+                                className="formControl"
+                                control={<Checkbox label="discount" name="delivery" onChange={onChangeDiscount}/>}
+                                label="Descuento"
+                            />
+                        </div>
                     </div>
                     <div>
                         <TextField
-                            id="order_final_price" 
-                            {...register('order_final_price')}
+                            id="orderPrice" 
+                            {...register('orderPrice')}
                             type="number" 
                             label="Precio Total"
                             defaultValue="0"
                             disabled
                             />
                     </div>
+                    {discount
+                        ?
+                        <div className="ao__discountdiv">
+                            <TextField 
+                                id="discountMount"
+                                {...register("orderDiscountReason")}
+                                label="Motivo"
+                                type="Text"
+                            />
+                        </div>
+                        //No renderiza nada
+                        :null
+                    }
                     <div className="ao_timediv">
                         <TextField
-                            {...register('order_timedelivery')}
+                            {...register('orderTimeDelivery')}
                             label="Entrega"
                             type="time"
                             defaultValue={getTimeNow()}
                             className="inputTime"
-                            inputProps={{
-                                step: 300, // 5 min
-                            }}
                         />
-                    </div>
-                    <div id="addOrder_chips">
-                            {
-                                orderProducts.map(data=>(
-                                    <Chip
-                                        key={Math.random(10,2000)} 
-                                        size="small" 
-                                        className="aoChips"
-                                        onDelete={()=>{
-                                            onDeleteChip(data)
-                                        }}
-                                        label={data.productName}
-                                    />
-                                ))
-                            }
                     </div>
                 </div>
             </div>
+            <div id="addOrder_chips">
+            {
+                orderProducts.length===0
+                ? <p className="ao_validerror">{errors.orderProducts && "Debe ingresar al menos 1 producto"}</p>
+                : null
+            }
+                {   
+                
+                    orderProducts.map(data=>{
+                        return(
+                            <Chip
+                                key={data.key}
+                                label={data.productName}
+                                className="aoChips"
+                                size="small"
+                                onDelete={()=>{
+                                    onDeleteChip(data)
+                                }}/>
+                    )})
+                }
+            </div>
             <div>
-                <Button type="submit">Agregar Pedido</Button>
+                <Button type="submit" variant="contained" className="button__color">Agregar Pedido</Button>
             </div>
         </form>
     )
+}
+const fetchSendData = async (data, URLPOST) =>{
+    data.orderDate=getDateNow()
+    data.orderIsPending = true
+    const options = {
+        method:'POST',
+        headers:{
+            'Content-Type':"application/json"
+        },
+        body: JSON.stringify(data)
+    }
+    //console.log(JSON.stringify(data))
+    fetch(URLPOST,options)
+    .then(res => console.log("RESPONSE: ",res))
+    .catch(error => console.error('Error', error))
 }
 const fetchApi = async (url, setState) => {
     let res
@@ -188,7 +271,6 @@ const fetchApi = async (url, setState) => {
     try{
         res = await fetch(url)
         json = await res.json()
-        
         setState([...json])
     }catch(error){
         console.log("error",error)
@@ -207,6 +289,51 @@ const getTimeNow = () => {
                 ? '0' + day.getMinutes()
                 : day.getMinutes()
             ) 
+    return time
+}
+const getProducts = (products) => {
+    let string = ""
+    products.forEach(e=>{
+        string += e.productName + ", "
+    })
+    string=string.substring(0,(string.length-2))
+    return string
+}
+const getProductPrice = (products) => {
+    let price = 0
+    products.forEach(e=>{
+        price+=e.productPrice
+    })
+    return price
+}
+const getDeliveryCost = () => {
+    let deliveryCost = document.querySelector('#orderDeliveryCost').value ? parseInt(document.querySelector('#orderDeliveryCost').value) : 0
+    return deliveryCost
+}
+const getDiscount = () =>{
+    let discountMount = 0 
+    if(document.querySelector('#discountMount')!=null){
+        let discountMount = document.querySelector('#discountMount').value ? parseInt(document.querySelector('#discountMount').value) : 0
+        return discountMount    
+    }else{
+        return discountMount
+    }   
+}
+const getDateNow = () => {
+    let day = new Date();
+    let time = 
+            day.getFullYear().toString() 
+            + "-" 
+            + ((day.getMonth()+1).toString().length === 1 
+                ? '0' + (day.getMonth()+1).toString()
+                : (day.getMonth()+1).toString()
+            )
+            + "-"
+            + (day.getDate().toString().length=== 1
+                ? '0'+ day.getDate().toString()
+                : day.getDate().toString()
+            )
+            //2021-09-02
     return time
 }
 export default AddOrder

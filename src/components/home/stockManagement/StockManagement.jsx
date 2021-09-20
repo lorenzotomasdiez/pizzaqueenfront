@@ -1,9 +1,9 @@
 import React from 'react'
-
+import AddProduct from './AddProduct'
 const StockManagement = () => {
     return (
         <div>
-            StockManagement
+            <AddProduct />
         </div>
     )
 }

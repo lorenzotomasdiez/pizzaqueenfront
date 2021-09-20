@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Summary = () => {
+const SummaryManagement = () => {
     return (
         <div>
             Summary
@@ -8,4 +8,4 @@ const Summary = () => {
     )
 }
 
-export default Summary
+export default SummaryManagement
