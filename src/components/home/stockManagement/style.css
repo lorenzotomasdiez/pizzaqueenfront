@@ -1,0 +1,29 @@
+.stock_content{
+}
+.stock_header{
+    display: flex;
+    margin: 10px;
+}
+/***************************************************************/
+.addproduct_form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-height: 500px;
+}
+.addproduct_child{
+    display: flex;
+}
+.addproduct_fields{
+    margin: 10px;
+    width: 180px;
+}
+.validerror{
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    color: red;
+}
+.add_product_button{
+    font-size: 0.7rem !important;
+}
+
