@@ -2,6 +2,7 @@
 .stock_header{
     display: flex;
     margin: 10px;
+    justify-content: space-between;
 }
 /***************************************************************/
 .addproduct_form{
@@ -24,5 +25,20 @@
 }
 .add_product_button{
     font-size: 0.7rem !important;
+}
+
+.stock_filter{
+    display: flex;
+    align-items: center;
+}
+.stock_filter h3{
+    font-size: 1.2rem;
+    margin-right: 10px;
+}
+.stock_select{
+    width: 120px !important;
+}
+.stock_addProduct{
+    margin-left: 50px !important;
 }
 

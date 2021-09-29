@@ -1,20 +1,21 @@
 import { Button, InputLabel, NativeSelect, TextField } from '@material-ui/core'
 import { useForm } from 'react-hook-form'
 import React from 'react'
+import { postProduct } from '../../helpers/postProduct'
 
 const AddProduct = ({setOpenPopup}) => {
     const {register, formState: { errors }, handleSubmit , setValue} = useForm()
     
     const onSubmit = (data, e) => {
         e.target.reset()
-        console.log(data)
+        postProduct(data)
         setOpenPopup(false)
     }
 
     const onChangeSelect = (data) => {
         setValue('productCategory', data.target.value)
     }
-
+    setValue('productCategory', 'Pizza')
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className="addproduct_form">
@@ -64,6 +65,7 @@ const AddProduct = ({setOpenPopup}) => {
                             }}
                             variant="outlined"
                             />
+                        <p className="validerror">{errors.productStock && "Debe ingresar Stock"}</p>
                     </div>
                 </div>
                 <div>

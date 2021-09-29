@@ -1,9 +1,7 @@
-import { forwardRef } from 'react';
-import { IconButton, NativeSelect } from '@material-ui/core'
+import React, { forwardRef } from 'react';
+import {Box, CircularProgress} from '@material-ui/core'
 import { Delete } from '@material-ui/icons'
 import MaterialTable from 'material-table'
-import React, { useEffect, useState } from 'react'
-import "./list.css"
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowUpward from '@material-ui/icons/ArrowUpward';
 import Check from '@material-ui/icons/Check';
@@ -19,6 +17,7 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import { useFetchProducts } from '../../hooks/useFetchProducts';
 const tableIcons = {
 Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
 Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -38,75 +37,51 @@ SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref} />),
 ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
 ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
-const List = () => {
-    const [data, setData] = useState([])
-    const [filter, setFilter] = useState("")
-    const dataprueba = [
-        {id:1, name:"Nombre prueba", category:"Categoria Prueba"},
-        {id:2, name:"Nombre prueba2", category:"Categoria Prueba2"},
-        {id:3, name:"Nombre prueba3", category:"Categoria Prueba3"},
-        {id:4, name:"Nombre prueba3", category:"Categoria Prueba3"},
-        {id:5, name:"Nombre prueba3", category:"Categoria Prueba3"},
-        {id:6, name:"Nombre prueba3", category:"Categoria Prueba3"},
-        {id:7, name:"Nombre prueba3", category:"Categoria Prueba3"},
-        {id:8, name:"Nombre prueba3", category:"Categoria Prueba3"},
-    ]
-    const columns = [
-        {title:"ID", field:'id'},
-        {title:"Nombre", field:'name'},
-        {title:"Categoria", field:'category'},
-        {title:"Precio", field:'price'},
-        {title:"Stock", field:'stock'},
-    ]
-    useEffect(() => {
-        alert(filter)
-    }, [filter])
+const columns = [
+    {title:"ID", field:'idProduct'},
+    {title:"Nombre", field:'productName'},
+    {title:"Categoria", field:'productCategory'},
+    {title:"Precio", field:'productPrice'},
+    {title:"Stock", field:'productStock'},
+]
+const List = ({category}) => {
+    const {data, loading} = useFetchProducts(category)
     return (
         <div className="material_table">
-            <MaterialTable className="material_table_root"
-                icons={tableIcons}
-                title={<ListSelect setFilter={setFilter}/>}
-                data={dataprueba}
-                columns={columns}
-                actions={[
-                    {
-                        icon:()=><Edit />,
-                        tooltip:'Editar item',
-                        onClick:(event, rowData) => alert('voy a editar a: ' + rowData.name)
-                    },
-                    {
-                        icon:()=><Delete />,
-                        tooltip:'Borrar item',
-                        onClick:(event, rowData) => alert('voy a borrar a: ' + rowData.name)
-                    }
-                ]}
-                options={
-                    {
-                        headerStyle:{
-                            backgroundColor:"#ce5f4a"
-                        },
-                        actionsColumnIndex:-1,
+            {loading
+                ?   
+                    <Box className="loading"><CircularProgress /></Box>
+                : 
+                    <MaterialTable className="material_table_root"
+                        icons={tableIcons}
+                        title="Productos"
+                        data={data}
+                        columns={columns}
+                        actions={[
+                            {
+                                icon:()=><Edit />,
+                                tooltip:'Editar item',
+                                onClick:(event, rowData) => alert('voy a editar a: ' + rowData.productName)
+                            },
+                            {
+                                icon:()=><Delete />,
+                                tooltip:'Borrar item',      
+                                onClick:(event, rowData) => alert('voy a borrar a: ' + rowData.productName)
+                            }
+                        ]}
+                        options={
+                            {
+                                headerStyle:{
+                                    backgroundColor:"#ce5f4a"
+                                },
+                                actionsColumnIndex:-1,
+                                
+                            }
+                        }
                         
-                    }
-                }
-                
-            />
+                    />
+            }
         </div>
-    )
-}
-
-
-const ListSelect = ({setFilter}) => {
-    const handleFilter = (e) => {
-        setFilter(e.target.value)
-    }
-    return (
-        <NativeSelect onChange={handleFilter}>
-            <option value="">Todo</option>
-            <option value="Pizza">Pizzas</option>
-            <option value="Bebidas">Bebidas</option>
-            <option value="Insumos">Insumos</option>
-        </NativeSelect>
     )
 }
 export default List
