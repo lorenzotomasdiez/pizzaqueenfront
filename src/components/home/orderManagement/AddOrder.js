@@ -260,7 +260,6 @@ const fetchSendData = async (data, URLPOST) =>{
         },
         body: JSON.stringify(data)
     }
-    //console.log(JSON.stringify(data))
     fetch(URLPOST,options)
     .then(res => console.log("RESPONSE: ",res))
     .catch(error => console.error('Error', error))
