@@ -49,6 +49,14 @@ const DescriptionCard = ({data}) => {
                         disabled  
                     />
                 </div>
+                <div className="description_field">
+                    <TextField 
+                        value={data.orderComment} 
+                        label="Comentario"
+                        variant="outlined"
+                        disabled
+                    />
+                </div>
             </div>
             <div className="divider"></div>
             <div className="card_div">

@@ -159,6 +159,14 @@ const AddOrder = ({setOpenPopup, setRerender, rerender}) => {
                             
                         />
                     </div>
+                    <div className="ao_comment">
+                        <TextField 
+                            {...register('orderComment')}
+                            label="Comentario Adicional"
+                            type="text"
+                            defaultValue=""
+                            />
+                    </div>
                 </div>
                 {/* CONTAINER 2 */}
                 <div className="ao__container">
@@ -209,7 +217,6 @@ const AddOrder = ({setOpenPopup, setRerender, rerender}) => {
                                 type="Text"
                             />
                         </div>
-                        //No renderiza nada
                         :null
                     }
                     <div className="ao_timediv">
@@ -221,28 +228,28 @@ const AddOrder = ({setOpenPopup, setRerender, rerender}) => {
                             className="inputTime"
                         />
                     </div>
+                    <div id="addOrder_chips">
+                    {
+                        orderProducts.length===0
+                        ? <p className="ao_validerror">{errors.orderProducts && "Debe ingresar al menos 1 producto"}</p>
+                        : null
+                    }
+                        {   
+                        
+                            orderProducts.map(data=>{
+                                return(
+                                    <Chip
+                                        key={data.key}
+                                        label={data.productName}
+                                        className="aoChips"
+                                        size="small"
+                                        onDelete={()=>{
+                                            onDeleteChip(data)
+                                        }}/>
+                            )})
+                        }
+                    </div>
                 </div>
-            </div>
-            <div id="addOrder_chips">
-            {
-                orderProducts.length===0
-                ? <p className="ao_validerror">{errors.orderProducts && "Debe ingresar al menos 1 producto"}</p>
-                : null
-            }
-                {   
-                
-                    orderProducts.map(data=>{
-                        return(
-                            <Chip
-                                key={data.key}
-                                label={data.productName}
-                                className="aoChips"
-                                size="small"
-                                onDelete={()=>{
-                                    onDeleteChip(data)
-                                }}/>
-                    )})
-                }
             </div>
             <div>
                 <Button type="submit" variant="contained" className="button__color">Agregar Pedido</Button>

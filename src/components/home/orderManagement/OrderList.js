@@ -65,16 +65,16 @@ const OrderList = (props) => {
                                 <OrderCard data={e} />
                             </Button>
                             {isPending
-                                ?   <IconButton onClick={()=>{handleDoneOrder(e)}}>
+                                ?   <Button onClick={()=>{handleDoneOrder(e)}}>
                                         <CheckCircleIcon className="ol_button" color="primary"/>
-                                    </IconButton>
+                                    </Button>
                                 :   null    
                             }
                             {isPending
                                 ?
-                                    <IconButton onClick={()=>{handleDeleteOrder(e)}}>
+                                    <Button onClick={()=>{handleDeleteOrder(e)}}>
                                         <DeleteIcon className="ol_button" color="primary"/>
-                                    </IconButton>
+                                    </Button>
                                 :   
                                     null
                             }
