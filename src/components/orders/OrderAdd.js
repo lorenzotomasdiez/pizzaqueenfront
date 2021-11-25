@@ -1,35 +1,84 @@
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, InputLabel, MenuItem, Select, TextField, Typography } from '@material-ui/core'
 import React from 'react'
-
-const OrderAdd = () => {
+import pizzas from '../../jsons/pizza.json'
+const OrderAdd = ({open, onClose}) => {
+    const [items, setItems] = React.useState([])
+    const [state, setState] = React.useState('')
+    const handleChange = (e) => {
+        setState(e.target.value)
+        console.log("STATE :" + e.target.value)
+        setItems([...items, {id: e.target.value, cantidad:1}])
+    }
     return (
-        <div className="modal fade" id="exampleModal" tabIndex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div className="modal-dialog" role="document">
-                <div className="modal-content">
-                <div className="modal-header">
-                    <h5 className="modal-title" id="exampleModalLabel">New message</h5>
-                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div className="modal-body">
-                    <form>
-                    <div className="form-group">
-                        <label htmlFor="recipient-name" className="col-form-label">Recipient:</label>
-                        <input type="text" className="form-control" id="recipient-name" />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="message-text" className="col-form-label">Message:</label>
-                        <textarea className="form-control" id="message-text"></textarea>
-                    </div>
-                    </form>
-                </div>
-                <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" className="btn btn-primary">Send message</button>
-                </div>
-                </div>
-            </div>
-        </div>
+        <Dialog open={open} onClose={onClose}>
+            <DialogTitle>Agregar Pedido</DialogTitle>
+            <DialogContent >
+                <Box style={{display: 'flex'}}>
+                    <Box>
+                        <TextField
+                            autoFocus
+                            margin="dense"
+                            id="name"
+                            label="Nombre"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                        />
+                        <TextField
+                            margin="dense"
+                            id="address"
+                            label="Domicilio"
+                            type="text"
+                            fullWidth
+                            variant="standard"
+                        />
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-label">Producto</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                label="Producto"
+                                onChange={handleChange}
+                                value={state}
+                            >
+                                {pizzas?.map((e)=><MenuItem key={e.id} value={e.id}>{e.productName}</MenuItem>)}
+                            </Select>
+                        </FormControl>
+                    </Box>
+                    <Box className="ml-3">
+                        <TextField 
+                            margin="dense"
+                            id="deliveryTime"
+                            label="Entrega"
+                            type="time"
+                            fullWidth
+                            variant="standard"
+                            InputLabelProps={{ shrink: true }}
+                        />
+                        <TextField
+                            margin="dense"
+                            id="total"
+                            label="Total"
+                            type="number"
+                            fullWidth
+                            variant="standard"
+                        />
+                    </Box>
+                </Box>
+                <Box>
+                    {items?.map((e)=>(
+                        <Box style={{display: 'flex', alignItems: 'center', textAlign: 'center'}} key={e.id}>
+                            <Typography variant="h6" component="h6">{e.id}</Typography>
+                            <TextField type="number" label="Cantidad" value={e.cantidad} style={{width: '10'}}/>
+                        </Box> 
+                    ))}
+                </Box>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={onClose}>Cancel</Button>
+                <Button onClick={onClose}>Subscribe</Button>
+            </DialogActions>
+        </Dialog>
     )
 }
 
